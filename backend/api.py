@@ -115,7 +115,7 @@ def protected():
     A protected endpoint. The auth_required decorator will require a header
     containing a valid JWT
     .. example::
-       $ curl http://localhost:5000/api/protected -X GET \
+       $ curl http://localhost:5000/api/protected -X GET 
          -H "Authorization: Bearer <your_token>"
     """
     return {'message': f'protected endpoint (allowed user {flask_praetorian.current_user().username})'}
