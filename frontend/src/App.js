@@ -1,69 +1,117 @@
-import React, { Component } from 'react';
-import './App.css';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import {login} from "./auth"
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
-class App extends Component {
-  /*state = {
-    topics: ["Loading..."],
-    question: "",
-    answer: ""
-  }
+export default function App() {
+  return (
+    <Router>
+      <div>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/login">Login</Link>
+            </li>
+            <li>
+              <Link to="/secret">Secret</Link>
+            </li>
+          </ul>
+        </nav>
 
-  componentDidMount() {
-    this.fetchTopics()
-
-  }
-
-  fetchTopics = async () => {
-    const { data } = await axios.get(
-      `${process.env.REACT_APP_API_URL}/get_topics`,
-    );
-    const { topics } = data;
-    this.setState({topics})
-  }
-
-  handleChange = (event) => {
-    this.setState({question: event.target.value});
-  }
-
-  handleSubmit = (event) => {
-    this.fetchAnswer();
-    event.preventDefault();
-  }
-
-  fetchAnswer = async () => {
-    const { question } = this.state;
-    const { data } = await axios.post(
-      `${process.env.REACT_APP_API_URL}/submit_question`, { question }
-    );
-    const { answer } = data;
-    this.setState({answer})
-  }
-
-  render() {
-    const { topics, question, answer } = this.state;
-    return (
-      <div className="App">
-        <header className="App-header">
-        <h1>List of topics to ask a question on</h1>
-        <ul>
-          {topics.map(topic => (<li key={topic}>{topic}</li>))}
-        </ul>
-          <form onSubmit={this.handleSubmit}>
-          <label>
-            Question:
-            <input type="text" value={question} onChange={this.handleChange} />
-          </label>
-          <input type="submit" value="Submit" />
-        </form>
-        <h1>Answer: {answer}</h1>
-        </header>
+        {/* A <Switch> looks through its children <Route>s and
+            renders the first one that matches the current URL. */}
+        <Switch>
+          <Route path="/login">
+            <Login />
+          </Route>
+          <Route path="/secret">
+            <Secret />
+          </Route>
+          <Route path="/">
+            <Home />
+          </Route>
+        </Switch>
       </div>
-    );
-  }*/
-  render() {
-    return fetch("/api");
-  }
+    </Router>
+  );
 }
 
-export default App;
+function Home() {
+  useEffect(() => {
+    fetch("/api").then(resp => resp.json()).then(resp => console.log(resp))
+  }, [])
+  return <h2>Home</h2>;
+}
+
+function Login() {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  const onSubmitClick = (e)=>{
+    e.preventDefault()
+    console.log("You pressed login")
+    let opts = {
+      'username': username,
+      'password': password
+    }
+    console.log(opts)
+    console.log(JSON.stringify(opts))
+    fetch('/api/login', {
+      method: 'post',
+      body: opts
+    }).then(r => r.json())
+      .then(token => {
+        if (token.access_token){
+          console.log(token)          
+        }
+        else {
+          console.log("Please type in correct username/password")
+        }
+      })
+  }
+
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value)
+  }
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value)
+  }
+
+  return (
+    <div>
+      <h2>Login</h2>
+      <form action="#">
+        <div>
+          <input type="text" 
+            placeholder="Username" 
+            onChange={handleUsernameChange}
+            value={username} 
+          />
+        </div>
+        <div>
+          <input
+            type="password"
+            placeholder="Password"
+            onChange={handlePasswordChange}
+            value={password}
+          />
+        </div>
+        <button onClick={onSubmitClick} type="submit">
+          Login Now
+        </button>
+      </form>
+    </div>
+  )
+}
+
+function Secret() {
+  return <h2>Secret</h2>;
+}
