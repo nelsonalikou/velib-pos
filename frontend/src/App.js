@@ -2,24 +2,8 @@ import React, { Component } from 'react';
 import './App.css';
 import axios from 'axios';
 
-/*class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <h1>List of topics to ask a question on</h1>
-          <h1>Ask tyour question here</h1>
-          <input></input>
-          <button>Submit</button>
-          <h1>Answer</h1>
-          </header>
-      </div>
-    );
-  }
-}*/
-
 class App extends Component {
-  state = {
+  /*state = {
     topics: ["Loading..."],
     question: "",
     answer: ""
@@ -76,6 +60,9 @@ class App extends Component {
         </header>
       </div>
     );
+  }*/
+  render() {
+    return fetch("/api");
   }
 }
 
