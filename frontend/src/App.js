@@ -65,10 +65,11 @@ function Login() {
     console.log(JSON.stringify(opts))
     fetch('/api/login', {
       method: 'post',
-      body: opts
+      body: JSON.stringify(opts)
     }).then(r => r.json())
       .then(token => {
         if (token.access_token){
+          login(token)
           console.log(token)          
         }
         else {
