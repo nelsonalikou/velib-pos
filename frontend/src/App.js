@@ -5,6 +5,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 
 class App extends Component {
   state = {
+    coordonnees : [],
     topics: ["Loading..."],
     question: "",
     answer: ""
@@ -27,9 +28,9 @@ class App extends Component {
     const { data } = await axios.get(
       `${process.env.REACT_APP_API_URL}/data`,
     );
-    const { topics } = data;
+    const { coordonnees } = data;
     //affichage
-    this.setState({topics})
+    this.setState({coordonnees})
   }
 
   handleChange = (event) => {
@@ -86,8 +87,10 @@ class App extends Component {
           </label>
           <input type="submit" value="Submit" />
         </form>
-        <h1>Answer: {answer}</h1>
         </header>
+        <main>
+          {this.fetchData}
+        </main>
       </div>
     );
   }

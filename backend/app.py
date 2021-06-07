@@ -86,10 +86,12 @@ def readcsv(filename):
 @app.route('/api/data')
 def getCSVData():
     #return readcsv("velib-pos.csv")
-    with open('velib-pos.csv','rb') as csvfile: 
-        reader = csv.reader(csvfile, delimiter=';', quotechar='|') 
-        for row in reader:
-            print(row)
+    results = []
+    with open("velib-pos.csv") as csvfile:
+        reader = csv.reader(csvfile, delimiter=';')
+        for row in reader: # each row is a list
+            results.append(row)
+    return ''.join(str(e) for e in results)
 
 
 
@@ -144,9 +146,11 @@ def protected():
 @app.route('/api/get_topics')
 def get_topics():
     return {"topics": ["topic1", "other stuff", "next topic"]}
+
 @app.route('/api/submit_question', methods=["POST"])
 def submit_question():
     question = json.loads(request.data)["question"]
     return {"answer": f"You Q was {len(question)} chars long"}
+
 if __name__ == '__main__':
     app.run(port=8080)
